@@ -21,8 +21,10 @@ const UserSchema = mongoose.Schema({
         required: true,
         unique: true,
     },
-    password: String,
-
+    password: {
+		type: String,
+		required: true
+	},
     readingList: [ReadingListItemSchema],
 }, { versionKey: false });
 

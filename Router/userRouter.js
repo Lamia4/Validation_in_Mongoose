@@ -15,4 +15,8 @@ const debugResponse = (req, res, next) => {
 
 router.post("/", Validation(postSchema), debugResponse, userController.create);
 
+
+router.post("/:userId/readingList", userController.addArticleToReadingList);
+router.post("/:userId/readingList/:articleId", userController.markArticleAsRead);
+
 export default router
