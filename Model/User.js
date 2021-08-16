@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 const ReadingListItemSchema = mongoose.Schema({
     articleId: {
@@ -29,6 +30,10 @@ const UserSchema = mongoose.Schema({
 }, { versionKey: false });
 
 const User = mongoose.model("User", UserSchema);
+
+async function emailExist (emailP) {
+	return await User.exists({ email: emailP })
+}
 
 async function addArticleToReadingList (userId, articleId) {
 	// Zuerst suchen wir den User und werfen einen Fehler, falls kein Datensatz gefunden werden kann.
@@ -92,14 +97,25 @@ async function updateCredentials (email, password) {
 // 	const result =  await user.save();
 //     res.json(result)
 // }
+async function isAuthenticated (email, password) {
+
+	const findUser = await User.findOne({ email: email });
+	
+	return bcrypt.compareSync(password, findUser.password)
+// return true, wenn alles übereinstimmt
+}
 
 async function createUser (nameP, emailP, passwordP) {
+	const SALT_ROUNDS = 12;
+	console.log("before hash");
+	const newBcrypt = bcrypt.hashSync(passwordP, SALT_ROUNDS);
+	console.log(newBcrypt);
 	const user = new User({
 		name: nameP,
 		email: emailP,
-        password: passwordP,
+        password: newBcrypt
 	});
-
+	console.log("before save");
 	return await user.save();
 }
 
@@ -111,5 +127,7 @@ export default {
     readAll, 
     readOne, 
     updateById, 
-    updateCredentials 
+    updateCredentials,
+	emailExist,
+	isAuthenticated 
 };

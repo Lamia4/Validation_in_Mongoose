@@ -1,5 +1,4 @@
 import User from "../Model/User.js";
-import Validation from "../Middleware/Validation.js";
 
 export default {
     readAll: async function (req, res, next) {
@@ -22,17 +21,23 @@ export default {
     },
 
     create: async function (req, res, next) {
+        // console.log("userController.create");
         try {
             // const resultT = Validation(req.body);
             // console.log(resultT);
             // if(resultT){
+            if(await User.emailExist(req.body.email)){
 
-                const result = await User.createUser(
-                    req.body.name,
-                    req.body.email,
-                    req.body.password
-                );
-                res.json(result);
+                const err = new Error("user already exists");
+                err.type = "exists";
+                throw err;
+            }
+            const result = await User.createUser(
+                req.body.name,
+                req.body.email,
+                req.body.password
+            );
+            res.json(result);
             // } else {
             //     console.log("validation false");
             // }
