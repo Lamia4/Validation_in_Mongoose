@@ -3,6 +3,6 @@ import authenticationController from "../Controllers/authenticationController.js
 
 const router = express.Router();
 
-router.post("/", authenticationController.loginByEmail );
+router.post("/", authenticationController.loginByEmail);
 
 export default router;

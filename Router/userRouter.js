@@ -1,6 +1,7 @@
 import express from "express";
 import userController from "../Controllers/userController.js";
 import Validation from "../Middleware/Validation.js";
+import TokenHandler from "../lib/token.js"
 
 import postSchema from "../Validation/users.post.js";
 

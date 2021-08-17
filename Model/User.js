@@ -97,13 +97,26 @@ async function updateCredentials (email, password) {
 // 	const result =  await user.save();
 //     res.json(result)
 // }
-async function isAuthenticated (email, password) {
+async function authenticate (email, password) {
 
 	const findUser = await User.findOne({ email: email });
 	
-	return bcrypt.compareSync(password, findUser.password)
-// return true, wenn alles übereinstimmt
-}
+	if(!findUser) throw new Error("User not found");
+
+	const isAuthenticated = bcrypt.compareSync(password, findUser.password);
+
+	if(!isAuthenticated) throw new Error("password incorrect");
+	
+	return findUser;
+
+};
+
+// try {
+//     authenticate();
+// } catch (error) {
+// 	console.log(error);
+// }
+
 
 async function createUser (nameP, emailP, passwordP) {
 	const SALT_ROUNDS = 12;
@@ -113,7 +126,7 @@ async function createUser (nameP, emailP, passwordP) {
 	const user = new User({
 		name: nameP,
 		email: emailP,
-        password: newBcrypt
+        password: newBcrypt,
 	});
 	console.log("before save");
 	return await user.save();
@@ -129,5 +142,5 @@ export default {
     updateById, 
     updateCredentials,
 	emailExist,
-	isAuthenticated 
+	authenticate 
 };

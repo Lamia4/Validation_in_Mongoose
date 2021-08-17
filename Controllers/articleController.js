@@ -10,6 +10,7 @@ export default {
     },
 
     readOne: async function (req, res, next) {
+        if(checkToken)
         try {
             const article = await Article.readOne(req.params.articleId);
             if (!article) return res.status(404).send();
