@@ -1,5 +1,7 @@
+import validToken from "../lib/token.js";
+
 const verifyToken = (req, res, next) => {
-    console.log(req.body.token);
+    validToken.checkToken(req.body.token);
     next();
 };
 
